@@ -18,7 +18,7 @@ var Prepare = require("../tools/prepare.js");
 var ensureAuthenticated = Helpers.ensureAuthenticated;
 var log = Helpers.log;
 
-var nodemailer = require('nodemailer');
+// var nodemailer = require('nodemailer');
 var async = require('async');
 var crypto = require('crypto');
 

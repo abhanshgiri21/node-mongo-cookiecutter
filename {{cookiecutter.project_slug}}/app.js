@@ -1,6 +1,7 @@
 
 'use strict';
 
+var bodyParser = require('body-parser');
 const express = require('express');
 var config = require('./config.json'); // Config
 var environment = config[process.env.NODE_ENV || 'development']; // Environment
@@ -13,7 +14,6 @@ const app = express();
 
 
 app.set('port', environment.port);
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
