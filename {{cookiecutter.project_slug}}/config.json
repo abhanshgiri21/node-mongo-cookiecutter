@@ -1,0 +1,36 @@
+{
+    "appName" : "Snozzle",
+    "appVersion" : "1.0.0",
+    "apiVersion" : "/api/v1",
+    "maintenance" : false,
+    "key" : "snozzlethewinetasters",
+    "url" : "",
+    "pagination" : {
+        "limit" : 10
+    },
+    "development": {
+        "type" : "development",
+        "port": "4040",
+        "hostname" : "http://localhost",
+        "mongo" : {
+            "uri" : "{{cookiecutter.mongodb_uri}}"
+        },
+        "onesignal" : {
+            "id" : "4547fead-b695-4f60-9017-3b67c2f4a971",
+            "key" : "MDYwMjcxNzEtZDE3MC00NGEyLWJiZWMtZGMxMjc5ZmNhYTc1"
+        }
+    },
+    "production": {
+        "type" : "production",
+        "port": "80",
+        "hostname" : "",
+        "masterId" : "i-01f0470268ec81232",
+        "mongo" : {
+            "uri" : "mongodb://user:password@host/dbname"
+        },
+        "onesignal" : {
+            "id" : "8164aab6-627e-40e3-bbe7-77527a1f1553",
+            "key" : "MWFjZDEyMTgtYmVkNC00NjU2LTgyNWUtNjRlMGRmNDA3NzM0"
+        }
+    }
+ }

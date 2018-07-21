@@ -1,0 +1,146 @@
+/**
+ * NUMERAL - /tools/helpers
+ * (c) 2017
+ */
+
+var mongoose = require('mongoose');
+var jwt = require('jwt-simple');
+var moment = require('moment');
+var _ = require('underscore');
+var request = require('request');
+var async = require('async');
+
+var config = require('../config.json'); // Config
+var environment = config[process.env.NODE_ENV || 'development']; // Environment
+
+Helpers = {
+
+    /*
+     |--------------------------------------------------------------------------
+     | Ensure authenticated by matching JWT
+     |--------------------------------------------------------------------------
+     */
+    ensureAuthenticated: function (req, res, next) {
+
+        if (!req.header('Authorization'))
+            return res.status(401).send({message: 'Please Login'});
+
+        var token = req.header('Authorization').split(' ')[1];
+
+        var payload = null;
+
+        try {
+            payload = jwt.decode(token, config.key);
+        } catch (err) {
+            return res.status(401).send({message: err.message});
+        }
+
+        if (payload.exp <= moment().unix())
+            return res.status(401).send({message: 'Token has expired'});
+
+        req.user = payload.sub;
+        next();
+    },
+
+    /*
+     |--------------------------------------------------------------------------
+     | Generate JSON Web Token
+     |--------------------------------------------------------------------------
+     */
+    createJWT : function (user) {
+
+        // TODO: Handle expiry
+
+        var payload = {
+            sub: user._id,
+            iat: moment().unix(),
+            exp: moment().add(999, 'days').unix()
+        };
+
+        return jwt.encode(payload, config.key);
+    },
+
+    /*
+     |--------------------------------------------------------------------------
+     | Log to 3rd party
+     |--------------------------------------------------------------------------
+     */
+    log : function(result, data, req, res) {
+
+        // TODO: Cleanup, standardize
+
+        // log(users, {'status': 200, method : method, endPoint: endPoint}, req, res);
+
+        if (!data)
+            return res.status(500).end();
+
+        // USER
+        if ((!req.user) || (typeof req.user.id === 'undefined'))
+            data.userId = null;
+        else
+            data.userId = req.user.id;
+
+        // STATUS
+
+        // 500 Internal Server Error
+        // 404 Not Found
+        // 403 Forbidden
+        // 409 Conflict
+        // 400 Bad Request
+
+        if (!data.status) {
+            data.status = 'unknown';
+            data.level = 'unknown';
+        }
+        else if (data.status >= 500) {
+            data.status = data.status.toString();
+            data.level = 'error';
+        }
+        else if ([404, 403, 409, 400].indexOf(data.status) > -1) {
+            data.status = data.status.toString();
+            data.level = 'warn';
+        }
+        else {
+            try {
+                data.status = data.status.toString();
+            } catch(e) {}
+            data.level = 'success';
+        }
+
+        // ENDPOINT
+        data.endPoint = config.apiVersion + data.endPoint;
+
+        // HEADERS
+        // data.headers = req.headers;
+
+        // MESSAGE
+        if (!result)
+            data.message = data.level;
+        else if ((typeof result !== 'undefined') && (result.message))
+            data.message = result.message;
+        else if ((typeof result !== 'undefined') && (typeof result.data !== 'undefined') && (result.data.message))
+            data.message = result.message;
+        else
+            data.message = data.level;
+
+        if (environment.type === "development") {
+            if ((data.level === 'error') || (data.level === 'warn')) {
+                console.log(data.message, data.method + '(' +  data.status + ') : ' + data.endPoint);
+                console.log(result);
+            }
+            else {
+                console.log(data.message, data.method + ': ' + data.endPoint);
+            }
+            return res.status(data.status).send(result);
+        }
+        else {
+            console.log(data.message, data.method + ': ' + data.endPoint);
+
+            return res.status(data.status).send(result);
+        }
+    }
+};
+
+module.exports = Helpers;
+
+// EOF
