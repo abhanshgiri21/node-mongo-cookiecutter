@@ -9,7 +9,7 @@ var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
 
-var User = mongoose.model('User', require('../models/user.js'));
+var User = require('../models/user.js');
 var config = require('../config.json'); // Config
 var environment = config[process.env.NODE_ENV || 'development']; // Environment
 
@@ -241,7 +241,7 @@ router.post('/password-forgot', function(req, res) {
                 + "<a href='" + environment.hostname + '/reset-password/' + token + "'>" + "Click to Reset Password" + "</a>"
                 + "<br><br>"
                 + "If you did not request to reset your password, please disregard this email.<br><br>"
-                + "- TastePal";
+                + "- {{cookiecutter.project_slug}}";
 
             console.log(html)
 
@@ -258,6 +258,7 @@ router.post('/password-forgot', function(req, res) {
             //
             //     return log({success: true}, {'status': 200, method: method, endPoint: endPoint}, req, res);
             // });
+            return log({success: true}, {'status': 200, method: method, endPoint: endPoint}, req, res);
 
         }
     ], function(err) {
@@ -333,6 +334,7 @@ router.post('/reset-password/:token', function (req, res) {
             //     return log({success: true}, {'status': 200, method: method, endPoint: endPoint}, req, res);
             //
             // });
+            return log({success: true}, {'status': 200, method: method, endPoint: endPoint}, req, res);
 
         }
     ], function(err) {

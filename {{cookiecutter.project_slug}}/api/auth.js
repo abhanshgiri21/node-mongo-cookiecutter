@@ -9,7 +9,7 @@ var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
 
-var User = mongoose.model('User', require('../models/user.js'));
+var User = require('../models/user.js');
 var config = require('../config.json'); // Config
 var environment = config[process.env.NODE_ENV || 'development']; // Environment
 
@@ -30,7 +30,7 @@ router.post('/email/signup', function(req, res) {
     var endPoint = '/auth/email/signup';
     var method = 'POST';
 
-    if ((typeof req.body.email === 'undefined') || (typeof req.body.nickname === 'undefined') || (typeof req.body.name === 'undefined') || (typeof req.body.password === 'undefined'))
+    if ((typeof req.body.email === 'undefined') || (typeof req.body.password === 'undefined'))
         return log({message: 'Invalid parameters'}, {'status': 400, method : method, endPoint: endPoint}, req, res);
 
     req.body.email = req.body.email.toLowerCase();
@@ -79,7 +79,7 @@ router.post('/email/login', function (req, res) {
     var endPoint = '/auth/email/login';
     var method = 'POST';
 
-    if ((typeof req.body.email === 'undefined') && (typeof req.body.nickname === 'undefined'))
+    if (typeof req.body.email === 'undefined')
         return log({message: 'Invalid parameters'}, {'status': 400, method : method, endPoint: endPoint}, req, res);
 
     var options;

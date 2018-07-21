@@ -14,21 +14,7 @@ var environment = config[process.env.NODE_ENV || 'development']; // Environment
  | DATABASE
  |--------------------------------------------------------------------------
  */
-var options = {
-    server: {
-        socketOptions: {
-            keepAlive: 300000,
-            connectTimeoutMS: 30000
-        },
-        auto_reconnect: true
-    },
-    replset: {
-        socketOptions: {
-            keepAlive: 300000,
-            connectTimeoutMS : 30000
-        }
-    }
-};
+var options = {};
 
 var connection = mongoose.connection;
 

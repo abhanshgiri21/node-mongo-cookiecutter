@@ -7,9 +7,9 @@ var mongoose = require('mongoose');
 var jwt = require('jwt-simple');
 var _ = require('underscore');
 
-var User = mongoose.model('User', require('../models/user.js'));
+var User = require('../models/user.js');
 
-var config = require('../tools/config.json'); // Config
+var config = require('../config.json'); // Config
 var environment = config[process.env.NODE_ENV || 'development']; // Environment
 
 var Helpers = require("../tools/helpers.js");
@@ -37,7 +37,7 @@ Prepare = {
         });
 
         return callback(null, users);
-    },
+    }
 
 };
 

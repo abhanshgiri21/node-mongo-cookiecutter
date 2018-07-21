@@ -6,8 +6,6 @@
 var mongoose = require('mongoose');
 var jwt = require('jwt-simple');
 var moment = require('moment');
-var _ = require('underscore');
-var request = require('request');
 var async = require('async');
 
 var config = require('../config.json'); // Config
