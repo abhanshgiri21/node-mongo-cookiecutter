@@ -30,7 +30,7 @@ Prepare = {
                 return false;
 
             // Strip sensitive information
-            user.password = undefined;
+            delete user.password;
 
             return true;
 
