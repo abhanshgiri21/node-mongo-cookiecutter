@@ -52,7 +52,7 @@ Helpers = {
         var payload = {
             sub: user._id,
             iat: moment().unix(),
-            exp: moment().add(999, 'days').unix()
+            exp: moment().add(1, 'days').unix()
         };
 
         return jwt.encode(payload, config.key);
