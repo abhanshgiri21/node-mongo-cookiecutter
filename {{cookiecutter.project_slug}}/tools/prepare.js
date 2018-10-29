@@ -32,7 +32,7 @@ Prepare = {
             // Strip sensitive information
             delete user.password;
 
-            return true;
+            return user;
 
         });
 
